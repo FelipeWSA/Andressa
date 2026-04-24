@@ -7,120 +7,140 @@
   <style>
     :root {
       --primary-color: #ff4d4d;
-      --bg-dark: #121212;
-      --card-bg: #1e1e1e;
-      --text-soft: #ccc;
+      /* Ajuste de cores para o efeito Glassmorphism */
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --bg-dark: #0a0a0a;
     }
 
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
+      font-family: 'Segoe UI', Roboto, sans-serif;
       background-color: var(--bg-dark);
+      /* Background com gradiente para destacar o efeito de vidro */
+      background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
       color: white;
       margin: 0;
       padding: 0;
       text-align: center;
       overflow-x: hidden;
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      border-radius: 15px;
-      background-color: var(--card-bg);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-      min-height: 90vh;
+      max-width: 850px;
+      margin: 30px auto;
+      padding: 40px 20px;
+      border-radius: 20px;
+      /* Efeito Glassmorphism */
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5);
+      
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
+      justify-content: center;
     }
 
     .title {
-      font-size: clamp(24px, 8vw, 36px);
-      margin-bottom: 20px;
+      font-size: clamp(28px, 10vw, 42px);
+      margin-bottom: 10px;
       color: var(--primary-color);
       text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: bold;
+      letter-spacing: 4px;
+      text-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
     }
 
-    /* Slider Melhorado */
     .slider-container {
       position: relative;
       width: 100%;
-      max-height: 500px;
-      margin: 20px 0;
+      border-radius: 15px;
+      margin: 30px 0;
       overflow: hidden;
-      border-radius: 12px;
-      touch-action: pan-y; /* Melhora o scroll vertical no mobile */
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
     }
 
     .slider-images {
       display: flex;
-      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      will-change: transform;
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
     .slider-images img {
       width: 100%;
-      height: 400px; /* Altura fixa para manter o padrão */
-      object-fit: cover; /* Evita que as fotos fiquem esticadas */
+      height: 450px;
+      object-fit: cover;
       flex-shrink: 0;
     }
 
-    /* Contador Estilizado */
+    /* Contador Glassmorphism */
     .counter {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 15px;
       margin: 30px 0;
     }
 
     .counter-box {
-      background-color: #262626;
-      border: 1px solid #333;
-      border-bottom: 3px solid var(--primary-color);
-      border-radius: 10px;
-      padding: 15px 10px;
-      transition: transform 0.3s ease;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(5px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 20px 10px;
+      transition: all 0.3s ease;
     }
 
     .counter-box:hover {
+      background: rgba(255, 77, 77, 0.1);
       transform: translateY(-5px);
+      border-color: var(--primary-color);
     }
 
     .counter-box span {
       display: block;
-      font-size: 28px;
+      font-size: 32px;
       font-weight: bold;
       color: var(--primary-color);
+      text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
     }
 
     .counter-box label {
-      font-size: 12px;
+      font-size: 11px;
       text-transform: uppercase;
-      color: var(--text-soft);
-      letter-spacing: 1px;
+      color: #aaa;
+      letter-spacing: 1.5px;
     }
 
     .message {
-      background: linear-gradient(145deg, #252525, #1a1a1a);
-      border-left: 5px solid var(--primary-color);
-      border-radius: 8px;
-      padding: 25px;
-      font-size: 1.1rem;
-      color: #ffe0e0;
-      font-style: italic;
+      padding: 30px;
+      font-size: 1.2rem;
+      color: #fff;
       line-height: 1.8;
+      font-style: italic;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
       margin-top: 20px;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
     }
 
-    /* Feedback visual do áudio */
+    /* Estilo das Partículas de Coração */
+    .heart-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      animation: floatUp 1.5s ease-out forwards;
+      font-size: 20px;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-150px) scale(2) rotate(20deg); opacity: 0; }
+    }
+
     .audio-hint {
       font-size: 12px;
-      color: #666;
-      margin-bottom: 10px;
+      color: #555;
+      margin-bottom: 5px;
     }
   </style>
 </head>
@@ -128,45 +148,27 @@
 
   <div class="container">
     <div class="title">Andressa & Felipe</div>
-    <p class="audio-hint">(Clique em qualquer lugar para música 🎵)</p>
+    <p class="audio-hint">(Toque na tela para música e corações ❤️)</p>
 
     <div class="slider-container" id="sliderContainer">
       <div class="slider-images" id="sliderImages">
-        <img src="image1.jpg" alt="Momento 1">
-        <img src="image2.jpg" alt="Momento 2">
-        <img src="image3.jpg" alt="Momento 3">
-        <img src="image4.jpg" alt="Momento 4">
-        <img src="image5.jpg" alt="Momento 5">
-        <img src="image6.jpg" alt="Momento 6">
-        <img src="image7.jpg" alt="Momento 7">
+        <img src="image1.jpg" alt="1">
+        <img src="image2.jpg" alt="2">
+        <img src="image3.jpg" alt="3">
+        <img src="image4.jpg" alt="4">
+        <img src="image5.jpg" alt="5">
+        <img src="image6.jpg" alt="6">
+        <img src="image7.jpg" alt="7">
       </div>
     </div>
 
     <div class="counter">
-      <div class="counter-box">
-        <span id="years">0</span>
-        <label>Anos</label>
-      </div>
-      <div class="counter-box">
-        <span id="months">0</span>
-        <label>Meses</label>
-      </div>
-      <div class="counter-box">
-        <span id="days">0</span>
-        <label>Dias</label>
-      </div>
-      <div class="counter-box">
-        <span id="hours">0</span>
-        <label>Horas</label>
-      </div>
-      <div class="counter-box">
-        <span id="minutes">0</span>
-        <label>Minutos</label>
-      </div>
-      <div class="counter-box">
-        <span id="seconds">0</span>
-        <label>Segundos</label>
-      </div>
+      <div class="counter-box"> <span id="years">0</span> <label>Anos</label> </div>
+      <div class="counter-box"> <span id="months">0</span> <label>Meses</label> </div>
+      <div class="counter-box"> <span id="days">0</span> <label>Dias</label> </div>
+      <div class="counter-box"> <span id="hours">0</span> <label>Horas</label> </div>
+      <div class="counter-box"> <span id="minutes">0</span> <label>Minutos</label> </div>
+      <div class="counter-box"> <span id="seconds">0</span> <label>Segundos</label> </div>
     </div>
 
     <div class="message">
@@ -176,84 +178,54 @@
   </div>
 
   <script>
-    // Configurações de Áudio
+    // --- Lógica de Áudio e Partículas ---
     const audio = new Audio('https://github.com/FelipeWSA/Meu-Amor/raw/refs/heads/main/music.mp3');
     audio.loop = true;
 
-    document.body.addEventListener('click', () => {
-      audio.paused ? audio.play() : audio.pause();
-    }, { once: false });
+    document.addEventListener('click', (e) => {
+      // Tocar música
+      if (audio.paused) audio.play();
 
-    // Slider de Imagens
+      // Gerar Coração
+      createHeart(e.clientX, e.clientY);
+    });
+
+    function createHeart(x, y) {
+      const heart = document.createElement('div');
+      heart.className = 'heart-particle';
+      heart.innerHTML = ['❤️', '💖', '💝', '💕'][Math.floor(Math.random() * 4)];
+      heart.style.left = (x - 10) + 'px';
+      heart.style.top = (y - 10) + 'px';
+      
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1500);
+    }
+
+    // --- Slider ---
     const sliderImages = document.getElementById("sliderImages");
     const images = document.querySelectorAll("#sliderImages img");
     let currentIndex = 0;
-    let startX = 0;
-    let isDragging = false;
-    let autoSlideInterval;
-
-    function updateSlider(smooth = true) {
-      sliderImages.style.transition = smooth ? "transform 0.5s ease-in-out" : "none";
-      sliderImages.style.transform = `translateX(-${currentIndex * 100}%)`;
-    }
 
     function nextImage() {
       currentIndex = (currentIndex + 1) % images.length;
-      updateSlider();
+      sliderImages.style.transform = `translateX(-${currentIndex * 100}%)`;
     }
 
-    function prevImage() {
-      currentIndex = (currentIndex - 1 + images.length) % images.length;
-      updateSlider();
-    }
+    setInterval(nextImage, 5000);
 
-    // Touch Events (Mobile Drag)
-    sliderImages.addEventListener("touchstart", e => {
-      startX = e.touches[0].clientX;
-      isDragging = true;
-      clearInterval(autoSlideInterval);
-    });
-
-    sliderImages.addEventListener("touchmove", e => {
-      if (!isDragging) return;
-      const currentX = e.touches[0].clientX;
-      const diff = startX - currentX;
-      // Impede o arraste visual livre para manter a performance, 
-      // foca apenas no gesto de "swipe"
-    });
-
-    sliderImages.addEventListener("touchend", e => {
-      isDragging = false;
-      const endX = e.changedTouches[0].clientX;
-      if (startX - endX > 50) nextImage();
-      else if (startX - endX < -50) prevImage();
-      startAutoSlide();
-    });
-
-    function startAutoSlide() {
-      clearInterval(autoSlideInterval);
-      autoSlideInterval = setInterval(nextImage, 5000);
-    }
-    startAutoSlide();
-
-    // Lógica do Contador (Melhorada)
+    // --- Contador ---
     const startDate = new Date("2025-03-27T00:00:00");
 
     function updateTimer() {
       const now = new Date();
-      
       let years = now.getFullYear() - startDate.getFullYear();
       let months = now.getMonth() - startDate.getMonth();
       let days = now.getDate() - startDate.getDate();
 
-      // Ajuste se o dia atual for menor que o dia de início
       if (days < 0) {
         months--;
-        const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-        days += lastMonth.getDate();
+        days += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
       }
-
-      // Ajuste se o mês atual for menor que o mês de início
       if (months < 0) {
         years--;
         months += 12;
@@ -268,7 +240,7 @@
     }
 
     setInterval(updateTimer, 1000);
-    updateTimer(); // Execução imediata
+    updateTimer();
   </script>
 </body>
 </html>
