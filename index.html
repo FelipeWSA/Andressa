@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Andressa e Felipe</title>
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
-
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Pinyon+Script&display=swap');
+
     :root {
       --primary-color: #ff4d4d;
       --glass-bg: rgba(255, 255, 255, 0.05);
@@ -26,7 +26,6 @@
       min-height: 100vh;
     }
 
-    /* Efeito de entrada suave */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
@@ -50,12 +49,14 @@
     }
 
     .title {
-      font-size: clamp(28px, 10vw, 42px);
-      font-weight: 700;
-      margin-bottom: 40px;
+      /* NOVA FONTE CURSIVA APLICADA AQUI */
+      font-family: 'Pinyon Script', cursive;
+      font-size: clamp(48px, 15vw, 64px); /* Tamanho aumentado para fonte cursiva */
+      font-weight: 400; /* Mais fina */
+      margin-bottom: 20px; /* Ajuste do espaçamento */
       color: var(--primary-color);
-      text-transform: uppercase;
-      letter-spacing: 6px;
+      text-transform: none; /* Mantém a caixa das letras */
+      letter-spacing: 2px; /* Reduzido para ligar as letras */
       text-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
     }
 
@@ -130,7 +131,7 @@
       border: 1px solid var(--glass-border);
     }
 
-    /* Partículas de Coração ao clicar */
+    /* Partículas de Coração */
     .heart-particle {
       position: fixed;
       pointer-events: none;
@@ -143,8 +144,8 @@
       100% { transform: translateY(-150px) scale(2) rotate(25deg); opacity: 0; }
     }
 
-    /* Pétalas de Rosa caindo */
-    .petal {
+    /* Chuva de Corações Caindo */
+    .falling-heart {
       position: fixed;
       top: -10%;
       user-select: none;
@@ -191,7 +192,6 @@
   </div>
 
   <script>
-    // --- Música e Corações ---
     const audio = new Audio('https://github.com/FelipeWSA/Meu-Amor/raw/refs/heads/main/music.mp3');
     audio.loop = true;
 
@@ -211,22 +211,22 @@
       setTimeout(() => heart.remove(), 1500);
     }
 
-    // --- Pétalas Caindo ---
-    function createPetal() {
-      const petal = document.createElement('div');
-      petal.className = 'petal';
-      petal.innerHTML = '🌸'; 
-      petal.style.left = Math.random() * 100 + 'vw';
-      petal.style.fontSize = Math.random() * 15 + 10 + 'px';
-      petal.style.opacity = Math.random() * 0.5 + 0.2;
+    // --- NOVA FUNÇÃO PARA CHUVA DE CORAÇÕES ---
+    function createFallingHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'falling-heart';
+      heart.innerHTML = ['❤️', '💖'][Math.floor(Math.random() * 2)]; // Apenas corações vermelhos/rosa
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = Math.random() * 15 + 10 + 'px';
+      heart.style.opacity = Math.random() * 0.5 + 0.2;
       const duration = Math.random() * 5 + 7;
-      petal.style.animationDuration = duration + 's';
-      document.body.appendChild(petal);
-      setTimeout(() => petal.remove(), duration * 1000);
+      heart.style.animationDuration = duration + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), duration * 1000);
     }
-    setInterval(createPetal, 600);
+    // Cria um coração a cada 600ms
+    setInterval(createFallingHeart, 600);
 
-    // --- Slider ---
     const sliderImages = document.getElementById("sliderImages");
     const totalImages = document.querySelectorAll("#sliderImages img").length;
     let currentIndex = 0;
@@ -237,7 +237,6 @@
     }
     setInterval(nextImage, 5000);
 
-    // --- Contador ---
     const startDate = new Date("2025-03-27T00:00:00");
 
     function updateTimer() {
