@@ -5,118 +5,144 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Andressa e Felipe</title>
   <style>
+    :root {
+      --primary-color: #ff4d4d;
+      --bg-dark: #121212;
+      --card-bg: #1e1e1e;
+      --text-soft: #ccc;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: var(--bg-dark);
       color: white;
       margin: 0;
       padding: 0;
       text-align: center;
+      overflow-x: hidden;
     }
 
     .container {
       max-width: 800px;
-      margin: 50px auto;
+      margin: 20px auto;
       padding: 20px;
-      border-radius: 10px;
-      background-color: #1e1e1e;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-      min-height: 80vh;
+      border-radius: 15px;
+      background-color: var(--card-bg);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      min-height: 90vh;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-around;
     }
 
     .title {
-      font-size: 36px;
+      font-size: clamp(24px, 8vw, 36px);
       margin-bottom: 20px;
-      color: #ff4d4d;
+      color: var(--primary-color);
       text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
     }
 
+    /* Slider Melhorado */
     .slider-container {
       position: relative;
-      max-width: 800px;
-      margin: 50px auto;
+      width: 100%;
+      max-height: 500px;
+      margin: 20px 0;
       overflow: hidden;
-      border-radius: 10px;
+      border-radius: 12px;
+      touch-action: pan-y; /* Melhora o scroll vertical no mobile */
     }
 
     .slider-images {
       display: flex;
-      transition: transform 0.5s ease-in-out;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
     }
 
     .slider-images img {
       width: 100%;
-      height: auto;
+      height: 400px; /* Altura fixa para manter o padrão */
+      object-fit: cover; /* Evita que as fotos fiquem esticadas */
       flex-shrink: 0;
     }
 
+    /* Contador Estilizado */
     .counter {
-      display: flex;
-      justify-content: space-evenly;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 15px;
+      margin: 30px 0;
     }
 
     .counter-box {
-      background-color: #333;
-      border: 2px solid #ff4d4d;
+      background-color: #262626;
+      border: 1px solid #333;
+      border-bottom: 3px solid var(--primary-color);
       border-radius: 10px;
-      padding: 15px 25px;
-      text-align: center;
-      flex: 1 1 120px;
-      min-width: 120px;
+      padding: 15px 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .counter-box:hover {
+      transform: translateY(-5px);
     }
 
     .counter-box span {
-      font-size: 32px;
+      display: block;
+      font-size: 28px;
       font-weight: bold;
-      color: #ff4d4d;
+      color: var(--primary-color);
     }
 
     .counter-box label {
-      font-size: 14px;
-      color: #ccc;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      letter-spacing: 1px;
     }
 
     .message {
-      background-color: #333;
-      border: 2px solid #ff4d4d;
-      border-radius: 10px;
-      padding: 20px;
-      font-size: 20px;
-      color: #ffcccc;
+      background: linear-gradient(145deg, #252525, #1a1a1a);
+      border-left: 5px solid var(--primary-color);
+      border-radius: 8px;
+      padding: 25px;
+      font-size: 1.1rem;
+      color: #ffe0e0;
       font-style: italic;
-      line-height: 1.6;
-      text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.5);
+      line-height: 1.8;
       margin-top: 20px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
     }
 
+    /* Feedback visual do áudio */
+    .audio-hint {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
     <div class="title">Andressa & Felipe</div>
+    <p class="audio-hint">(Clique em qualquer lugar para música 🎵)</p>
 
-    <!-- Slider de Imagens -->
     <div class="slider-container" id="sliderContainer">
       <div class="slider-images" id="sliderImages">
-        <img src="image1.jpg" alt="Imagem 1">
-        <img src="image2.jpg" alt="Imagem 2">
-        <img src="image3.jpg" alt="Imagem 3">
-        <img src="image4.jpg" alt="Imagem 4">
-        <img src="image5.jpg" alt="Imagem 5">
-        <img src="image6.jpg" alt="Imagem 6">
-        <img src="image7.jpg" alt="Imagem 7">
+        <img src="image1.jpg" alt="Momento 1">
+        <img src="image2.jpg" alt="Momento 2">
+        <img src="image3.jpg" alt="Momento 3">
+        <img src="image4.jpg" alt="Momento 4">
+        <img src="image5.jpg" alt="Momento 5">
+        <img src="image6.jpg" alt="Momento 6">
+        <img src="image7.jpg" alt="Momento 7">
       </div>
     </div>
 
-    <!-- Contador de Tempo -->
-    <div class="counter" id="timer">
+    <div class="counter">
       <div class="counter-box">
         <span id="years">0</span>
         <label>Anos</label>
@@ -143,148 +169,106 @@
       </div>
     </div>
 
-    <!-- Mensagem -->
     <div class="message">
-      Eu amo o seu sorriso.
-      Amo a forma como você enxerga o mundo.
-      Amo as suas manias.<br>
-      Te amo assim por completo.
+      "Eu amo o seu sorriso. Amo a forma como você enxerga o mundo. <br>
+      Amo as suas manias. Te amo assim, por completo."
     </div>
   </div>
 
   <script>
-    // Reproduzir/pausar áudio ao clicar ou tocar na tela
+    // Configurações de Áudio
     const audio = new Audio('https://github.com/FelipeWSA/Meu-Amor/raw/refs/heads/main/music.mp3');
     audio.loop = true;
 
-    document.body.addEventListener('click', function() {
-      if (audio.paused) {
-        audio.play();
-      } else {
-        audio.pause();
-      }
-    });
+    document.body.addEventListener('click', () => {
+      audio.paused ? audio.play() : audio.pause();
+    }, { once: false });
 
-    audio.addEventListener('error', function() {
-      console.error('Erro ao carregar o áudio:', audio.error);
-    });
-
-    // Lista de imagens
+    // Slider de Imagens
     const sliderImages = document.getElementById("sliderImages");
     const images = document.querySelectorAll("#sliderImages img");
     let currentIndex = 0;
+    let startX = 0;
     let isDragging = false;
-    let startX, currentTranslate, prevTranslate = 0;
-    const autoSlideInterval = 5000; // Tempo para troca automática (5 segundos)
-    let autoSlide;
+    let autoSlideInterval;
 
-    // Função para alternar para a próxima imagem
+    function updateSlider(smooth = true) {
+      sliderImages.style.transition = smooth ? "transform 0.5s ease-in-out" : "none";
+      sliderImages.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+
     function nextImage() {
       currentIndex = (currentIndex + 1) % images.length;
       updateSlider();
     }
 
-    // Função para alternar para a imagem anterior
     function prevImage() {
       currentIndex = (currentIndex - 1 + images.length) % images.length;
       updateSlider();
     }
 
-    // Função para atualizar o deslocamento do slider
-    function updateSlider() {
-      sliderImages.style.transform = `translateX(-${currentIndex * 100}%)`;
-    }
-
-    // Configuração de deslizar manualmente
-    sliderImages.addEventListener("touchstart", startDrag);
-    sliderImages.addEventListener("touchmove", drag);
-    sliderImages.addEventListener("touchend", endDrag);
-
-    // Função para iniciar o movimento de deslizar
-    function startDrag(event) {
+    // Touch Events (Mobile Drag)
+    sliderImages.addEventListener("touchstart", e => {
+      startX = e.touches[0].clientX;
       isDragging = true;
-      startX = event.touches[0].clientX;
-      currentTranslate = prevTranslate;
-    }
+      clearInterval(autoSlideInterval);
+    });
 
-    // Função de deslizar
-    function drag(event) {
-      if (isDragging) {
-        const currentX = event.touches[0].clientX;
-        const deltaX = currentX - startX;
-        sliderImages.style.transform = `translateX(${currentTranslate + deltaX}px)`;
-      }
-    }
+    sliderImages.addEventListener("touchmove", e => {
+      if (!isDragging) return;
+      const currentX = e.touches[0].clientX;
+      const diff = startX - currentX;
+      // Impede o arraste visual livre para manter a performance, 
+      // foca apenas no gesto de "swipe"
+    });
 
-    // Função ao terminar o movimento de deslizar
-    function endDrag(event) {
+    sliderImages.addEventListener("touchend", e => {
       isDragging = false;
-      const endX = event.changedTouches[0].clientX;
-      const deltaX = endX - startX;
+      const endX = e.changedTouches[0].clientX;
+      if (startX - endX > 50) nextImage();
+      else if (startX - endX < -50) prevImage();
+      startAutoSlide();
+    });
 
-      // Define o próximo ou anterior com base no deslizamento
-      if (deltaX > 50) {
-        prevImage();
-      } else if (deltaX < -50) {
-        nextImage();
-      } else {
-        // Restaura posição atual se o deslize for pequeno
-        updateSlider();
-      }
-
-      prevTranslate = -currentIndex * sliderContainer.offsetWidth;
-    }
-
-    // Configuração de troca automática
     function startAutoSlide() {
-      autoSlide = setInterval(nextImage, autoSlideInterval);
+      clearInterval(autoSlideInterval);
+      autoSlideInterval = setInterval(nextImage, 5000);
     }
-
-    function stopAutoSlide() {
-      clearInterval(autoSlide);
-    }
-
-    // Inicia a troca automática e pausa ao interagir manualmente
     startAutoSlide();
-    sliderContainer.addEventListener("mouseover", stopAutoSlide);
-    sliderContainer.addEventListener("mouseleave", startAutoSlide);
 
-    // Contador de tempo de namoro
+    // Lógica do Contador (Melhorada)
     const startDate = new Date("2025-03-27T00:00:00");
+
     function updateTimer() {
       const now = new Date();
-      const years = now.getFullYear() - startDate.getFullYear();
-      const months = now.getMonth() - startDate.getMonth() + (years * 12);
-      const days = now.getDate() - startDate.getDate();
+      
+      let years = now.getFullYear() - startDate.getFullYear();
+      let months = now.getMonth() - startDate.getMonth();
+      let days = now.getDate() - startDate.getDate();
 
-      // Ajustar meses e dias
-      let adjustedMonths = months;
-      let adjustedDays = days;
-
+      // Ajuste se o dia atual for menor que o dia de início
       if (days < 0) {
-        adjustedMonths--;
-        const lastMonthDays = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
-        adjustedDays += lastMonthDays;
+        months--;
+        const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        days += lastMonth.getDate();
       }
 
-      // Calcular horas, minutos e segundos
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const seconds = now.getSeconds();
+      // Ajuste se o mês atual for menor que o mês de início
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
 
-      // Atualizar os elementos do contador
       document.getElementById("years").innerText = years;
-      document.getElementById("months").innerText = adjustedMonths;
-      document.getElementById("days").innerText = adjustedDays;
-      document.getElementById("hours").innerText = hours;
-      document.getElementById("minutes").innerText = minutes;
-      document.getElementById("seconds").innerText = seconds;
+      document.getElementById("months").innerText = months;
+      document.getElementById("days").innerText = days;
+      document.getElementById("hours").innerText = now.getHours();
+      document.getElementById("minutes").innerText = now.getMinutes();
+      document.getElementById("seconds").innerText = now.getSeconds();
     }
 
-    // Atualiza o contador a cada segundo
     setInterval(updateTimer, 1000);
-
+    updateTimer(); // Execução imediata
   </script>
-
 </body>
 </html>
