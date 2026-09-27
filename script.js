@@ -22,10 +22,39 @@ function localPhoto(name) {
   return `${PHOTOS_DIRECTORY}/${encodeURIComponent(name)}`;
 }
 
+function sortPhotos(files) {
+  return files.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR', { numeric: true }));
+}
+
+async function getLocalPhotos() {
+  // O servidor de prévia Python lista os arquivos da pasta em uma página HTML.
+  // Isso permite adicionar várias fotos sem manter uma lista manual durante o teste local.
+  const response = await fetch(`${PHOTOS_DIRECTORY}/`, { cache: 'no-store' });
+  if (!response.ok) throw new Error(`Pasta local: ${response.status}`);
+  const listing = new DOMParser().parseFromString(await response.text(), 'text/html');
+  if (!listing.title.startsWith('Directory listing for')) {
+    throw new Error('Este servidor local não fornece a lista de arquivos');
+  }
+  const folderPath = new URL(`${PHOTOS_DIRECTORY}/`, location.href).pathname;
+  const files = [...listing.querySelectorAll('a[href]')]
+    .map(link => new URL(link.getAttribute('href'), response.url))
+    .filter(url => url.origin === location.origin && url.pathname.startsWith(folderPath))
+    .map(url => decodeURIComponent(url.pathname.slice(folderPath.length)))
+    .filter(name => name && !name.includes('/') && PHOTO_EXTENSIONS.test(name))
+    .map(name => ({ name, url: localPhoto(name) }));
+  return sortPhotos(files);
+}
+
 async function getPhotos() {
   // GitHub Pages não permite listar uma pasta diretamente. A API pública do
   // próprio repositório retorna os arquivos atuais sempre que a página abre.
-  if (!['localhost', '127.0.0.1', ''].includes(location.hostname)) {
+  if (['localhost', '127.0.0.1'].includes(location.hostname)) {
+    try {
+      return await getLocalPhotos();
+    } catch (error) {
+      console.warn('Não foi possível listar a pasta na prévia local.', error);
+    }
+  } else if (location.hostname) {
     try {
       const response = await fetch(GITHUB_PHOTOS_API, {
         headers: { Accept: 'application/vnd.github+json' },
@@ -34,10 +63,9 @@ async function getPhotos() {
       if (!response.ok) throw new Error(`GitHub API: ${response.status}`);
       const files = await response.json();
       if (!Array.isArray(files)) throw new Error('Resposta inesperada da galeria');
-      return files
+      return sortPhotos(files
         .filter(file => file.type === 'file' && PHOTO_EXTENSIONS.test(file.name))
-        .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR', { numeric: true }))
-        .map(file => ({ name: file.name, url: localPhoto(file.name) }));
+        .map(file => ({ name: file.name, url: localPhoto(file.name) })));
     } catch (error) {
       console.warn('Não foi possível atualizar a lista de fotos; usando as fotos iniciais.', error);
     }

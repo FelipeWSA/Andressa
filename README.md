@@ -10,4 +10,4 @@ Site estático para GitHub Pages. A galeria é carregada automaticamente a parti
 
 Não é preciso editar HTML ou JavaScript, nem renomear imagens, para adicionar ou remover fotos. O site precisa continuar público para que a lista seja acessível. Se a API estiver temporariamente indisponível, as sete fotos iniciais continuam sendo exibidas.
 
-Para uma prévia local simples, execute `python -m http.server 8000` na raiz e abra `http://localhost:8000`. A prévia usa as sete fotos iniciais; as novas aparecem automaticamente depois de enviadas ao GitHub.
+Para uma prévia local, execute `python -m http.server 8000` na raiz e abra `http://localhost:8000`. A prévia lê todos os arquivos da pasta `Fotos/` ao carregar a página; atualize a página depois de adicionar imagens. Se usar outro servidor que não liste diretórios, a prévia recorre às sete fotos iniciais.
