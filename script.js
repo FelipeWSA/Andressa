@@ -1,4 +1,5 @@
-const GITHUB_PHOTOS_API = 'https://api.github.com/repos/FelipeWSA/Andressa/contents/photos?ref=main';
+const PHOTOS_DIRECTORY = 'Fotos';
+const GITHUB_PHOTOS_API = `https://api.github.com/repos/FelipeWSA/Andressa/contents/${PHOTOS_DIRECTORY}?ref=main`;
 const PHOTO_EXTENSIONS = /\.(avif|gif|jpe?g|png|webp)$/i;
 const FALLBACK_PHOTOS = ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg', 'image6.jpg', 'image7.jpg'];
 const stage = document.getElementById('photo-stage');
@@ -18,7 +19,7 @@ let slideRequest = 0;
 let activeLayer = -1;
 
 function localPhoto(name) {
-  return `photos/${encodeURIComponent(name)}`;
+  return `${PHOTOS_DIRECTORY}/${encodeURIComponent(name)}`;
 }
 
 async function getPhotos() {
@@ -46,9 +47,8 @@ async function getPhotos() {
   return FALLBACK_PHOTOS.map(name => ({ name, url: localPhoto(name) }));
 }
 
-function photoDescription(name, index) {
-  const cleanName = name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim();
-  return /^image\d+$/i.test(cleanName) ? `Momento ${index + 1}` : cleanName;
+function photoDescription(index) {
+  return `Momento ${index + 1}`;
 }
 
 function resetAutoplay() {
@@ -72,7 +72,7 @@ function showPhoto(index) {
     loading.hidden = true;
     requestAnimationFrame(() => {
       if (request !== slideRequest) return;
-      incoming.alt = `Foto de Andressa e Felipe: ${photoDescription(photo.name, currentIndex)}`;
+      incoming.alt = `Foto de Andressa e Felipe: ${photoDescription(currentIndex)}`;
       incoming.removeAttribute('aria-hidden');
       incoming.classList.add('is-visible');
       if (outgoing) {
@@ -92,7 +92,7 @@ function showPhoto(index) {
   preload.src = photo.url;
 
   count.textContent = `${String(currentIndex + 1).padStart(2, '0')} / ${String(photos.length).padStart(2, '0')}`;
-  caption.textContent = photoDescription(photo.name, currentIndex);
+  caption.textContent = photoDescription(currentIndex);
   [...thumbnails.children].forEach((button, buttonIndex) => {
     button.setAttribute('aria-current', String(buttonIndex === currentIndex));
   });
@@ -107,7 +107,7 @@ function movePhoto(direction) {
 async function initGallery() {
   photos = await getPhotos();
   if (!photos.length) {
-    loading.textContent = 'Ainda não há fotos na pasta photos.';
+    loading.textContent = 'Ainda não há fotos na pasta Fotos.';
     previousButton.hidden = true;
     nextButton.hidden = true;
     return;
@@ -117,7 +117,7 @@ async function initGallery() {
     const button = document.createElement('button');
     button.className = 'thumbnail';
     button.type = 'button';
-    button.setAttribute('aria-label', `Mostrar foto ${index + 1}: ${photoDescription(photo.name, index)}`);
+    button.setAttribute('aria-label', `Mostrar foto ${index + 1}`);
     button.setAttribute('aria-current', 'false');
     const image = document.createElement('img');
     image.src = photo.url;
