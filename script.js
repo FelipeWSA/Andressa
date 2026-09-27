@@ -124,7 +124,17 @@ function showPhoto(index) {
   [...thumbnails.children].forEach((button, buttonIndex) => {
     button.setAttribute('aria-current', String(buttonIndex === currentIndex));
   });
-  thumbnails.children[currentIndex]?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+  const activeThumbnail = thumbnails.children[currentIndex];
+  if (activeThumbnail) {
+    const stripBounds = thumbnails.getBoundingClientRect();
+    const thumbnailBounds = activeThumbnail.getBoundingClientRect();
+    const offset = thumbnailBounds.left < stripBounds.left
+      ? thumbnailBounds.left - stripBounds.left
+      : thumbnailBounds.right > stripBounds.right
+        ? thumbnailBounds.right - stripBounds.right
+        : 0;
+    if (offset) thumbnails.scrollBy({ left: offset, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+  }
 }
 
 function movePhoto(direction) {
