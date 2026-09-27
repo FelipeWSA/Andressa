@@ -2,8 +2,7 @@ const GITHUB_PHOTOS_API = 'https://api.github.com/repos/FelipeWSA/Andressa/conte
 const PHOTO_EXTENSIONS = /\.(avif|gif|jpe?g|png|webp)$/i;
 const FALLBACK_PHOTOS = ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg', 'image6.jpg', 'image7.jpg'];
 const stage = document.getElementById('photo-stage');
-const featured = document.getElementById('featured-photo');
-const backdrop = document.getElementById('photo-backdrop');
+const photoLayers = [document.getElementById('featured-photo'), document.getElementById('second-photo')];
 const thumbnails = document.getElementById('thumbnails');
 const loading = document.getElementById('gallery-loading');
 const count = document.getElementById('photo-count');
@@ -16,6 +15,7 @@ let photos = [];
 let currentIndex = 0;
 let slideTimer;
 let slideRequest = 0;
+let activeLayer = -1;
 
 function localPhoto(name) {
   return `photos/${encodeURIComponent(name)}`;
@@ -63,17 +63,31 @@ function showPhoto(index) {
   const request = ++slideRequest;
   const photo = photos[currentIndex];
   const preload = new Image();
-  featured.classList.remove('is-visible');
   preload.onload = () => {
     if (request !== slideRequest) return;
-    featured.src = photo.url;
-    featured.alt = `Foto de Andressa e Felipe: ${photoDescription(photo.name, currentIndex)}`;
-    backdrop.style.backgroundImage = `url("${photo.url.replaceAll('"', '%22')}")`;
+    const nextLayer = activeLayer === 0 ? 1 : 0;
+    const incoming = photoLayers[nextLayer];
+    const outgoing = photoLayers[activeLayer];
+    incoming.src = photo.url;
     loading.hidden = true;
-    requestAnimationFrame(() => featured.classList.add('is-visible'));
+    requestAnimationFrame(() => {
+      if (request !== slideRequest) return;
+      incoming.alt = `Foto de Andressa e Felipe: ${photoDescription(photo.name, currentIndex)}`;
+      incoming.removeAttribute('aria-hidden');
+      incoming.classList.add('is-visible');
+      if (outgoing) {
+        outgoing.classList.remove('is-visible');
+        outgoing.alt = '';
+        outgoing.setAttribute('aria-hidden', 'true');
+      }
+      activeLayer = nextLayer;
+    });
   };
   preload.onerror = () => {
-    if (request === slideRequest) loading.textContent = 'Não foi possível abrir esta foto.';
+    if (request === slideRequest) {
+      loading.hidden = false;
+      loading.textContent = 'Não foi possível abrir esta foto.';
+    }
   };
   preload.src = photo.url;
 
@@ -140,6 +154,36 @@ stage.addEventListener('mouseenter', () => clearInterval(slideTimer));
 stage.addEventListener('mouseleave', resetAutoplay);
 document.addEventListener('visibilitychange', resetAutoplay);
 reducedMotion.addEventListener('change', resetAutoplay);
+
+const heartsLayer = document.getElementById('hearts-layer');
+let heartsTimer;
+function addFallingHeart() {
+  if (document.hidden || heartsLayer.childElementCount >= (innerWidth < 600 ? 10 : 18)) return;
+  const heart = document.createElement('span');
+  heart.className = 'falling-heart';
+  heart.textContent = Math.random() < .5 ? '❤️' : '💖';
+  heart.style.left = `${Math.random() * 96}%`;
+  heart.style.setProperty('--heart-size', `${11 + Math.random() * 13}px`);
+  heart.style.setProperty('--heart-opacity', `${.23 + Math.random() * .24}`);
+  heart.style.setProperty('--fall-duration', `${7 + Math.random() * 5}s`);
+  heart.style.setProperty('--drift', `${-35 + Math.random() * 70}px`);
+  heart.addEventListener('animationend', () => heart.remove(), { once: true });
+  heartsLayer.append(heart);
+}
+function updateHearts() {
+  clearInterval(heartsTimer);
+  if (document.hidden || reducedMotion.matches) {
+    heartsLayer.replaceChildren();
+    return;
+  }
+  const maxHearts = innerWidth < 600 ? 10 : 18;
+  while (heartsLayer.childElementCount > maxHearts) heartsLayer.firstElementChild.remove();
+  heartsTimer = setInterval(addFallingHeart, innerWidth < 600 ? 1100 : 700);
+}
+document.addEventListener('visibilitychange', updateHearts);
+reducedMotion.addEventListener('change', updateHearts);
+window.addEventListener('resize', updateHearts);
+updateHearts();
 
 const startDate = new Date(2025, 2, 27);
 function updateCounter() {
