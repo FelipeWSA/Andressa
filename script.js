@@ -233,25 +233,30 @@ function updateCounter() {
 updateCounter();
 setInterval(updateCounter, 1000);
 
-const musicButton = document.getElementById('music-button');
-const music = new Audio('music.mp3');
-music.loop = true;
+const music = document.getElementById('background-music');
 music.volume = 0.55;
-musicButton.addEventListener('click', async () => {
+function stopWaitingForInteraction() {
+  document.removeEventListener('pointerdown', tryStartMusic);
+  document.removeEventListener('touchstart', tryStartMusic);
+  document.removeEventListener('click', tryStartMusic);
+  document.removeEventListener('keydown', tryStartMusic);
+}
+async function tryStartMusic() {
   if (!music.paused) {
-    music.pause();
-    musicButton.setAttribute('aria-pressed', 'false');
-    musicButton.setAttribute('aria-label', 'Ativar música');
+    stopWaitingForInteraction();
     return;
   }
   try {
     await music.play();
-    musicButton.setAttribute('aria-pressed', 'true');
-    musicButton.setAttribute('aria-label', 'Pausar música');
-  } catch (error) {
-    console.warn('Não foi possível reproduzir a música.', error);
-    musicButton.setAttribute('aria-label', 'Música indisponível');
+    stopWaitingForInteraction();
+  } catch {
+    // Alguns navegadores exigem um toque ou clique antes de liberar áudio.
   }
-});
+}
+document.addEventListener('pointerdown', tryStartMusic);
+document.addEventListener('touchstart', tryStartMusic, { passive: true });
+document.addEventListener('click', tryStartMusic);
+document.addEventListener('keydown', tryStartMusic);
+window.addEventListener('load', tryStartMusic, { once: true });
 
 initGallery();
