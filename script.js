@@ -7,7 +7,6 @@ const photoLayers = [document.getElementById('featured-photo'), document.getElem
 const thumbnails = document.getElementById('thumbnails');
 const loading = document.getElementById('gallery-loading');
 const count = document.getElementById('photo-count');
-const caption = document.getElementById('gallery-caption');
 const previousButton = document.getElementById('previous-photo');
 const nextButton = document.getElementById('next-photo');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -120,7 +119,6 @@ function showPhoto(index) {
   preload.src = photo.url;
 
   count.textContent = `${String(currentIndex + 1).padStart(2, '0')} / ${String(photos.length).padStart(2, '0')}`;
-  caption.textContent = photoDescription(currentIndex);
   [...thumbnails.children].forEach((button, buttonIndex) => {
     button.setAttribute('aria-current', String(buttonIndex === currentIndex));
   });
